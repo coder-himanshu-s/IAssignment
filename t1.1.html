@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Trigonometry Problem Generator</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Calibri', sans-serif;
+    }
+    body {
+      background: #f6f8fb;
+      padding: 20px;
+      color: #333;
+      font-size: 27px;
+      font-weight: bold;
+      margin: 0;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      padding: 20px;
+      border-radius: 16px;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      gap: 80px;
+      margin-bottom: 30px;
+    }
+    .controls {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    button {
+      background: #1BAD83;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: all 0.3s;
+    }
+    button:hover {
+      background: #158c6a;
+      transform: translateY(-2px);
+    }
+    .triangle-diagram {
+      position: relative;
+      width: 240px;
+      height: 140px;
+      margin: 40px auto;
+    }
+    .side.ab {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 4px;
+      height: 140px;
+      background: black;
+    }
+    .side.bc {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 240px;
+      height: 4px;
+      background: black;
+    }
+    .side-ac-line {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+    }
+    .label {
+      position: absolute;
+      font-weight: bold;
+      background: white;
+      padding: 2px 6px;
+      border-radius: 6px;
+      box-shadow: 3px 3px 4px rgba(181, 181, 181, 1.5);
+      color: black;
+    }
+    .point-a {
+      top: -20px;
+      left: -15px;
+      background-color: #ED8392;
+    }
+    .point-b {
+      bottom: -25px;
+      left: -15px;
+      background-color: #7BC3EC;
+    }
+    .point-c {
+      bottom: -25px;
+      right: -15px;
+      background-color: #B7F3F0;
+    }
+    .dimension {
+      position: absolute;
+      background: white;
+      padding: 2px 6px;
+      border-radius: 10px;
+      box-shadow: 3px 3px 4px rgba(181, 181, 181, 1.5);
+    }
+    .ab-label {
+      left: -40px;
+      top: 45px;
+      background: linear-gradient(to top, #F5FAFF, #3399FF);
+    }
+    .bc-label {
+      bottom: -35px;
+      left: 90px;
+      background: linear-gradient(to top, #F9FAD6, #F3DDFF);
+    }
+    .ac-label {
+      top: 40px;
+      right: 90px;
+      background: linear-gradient(to top, #F3DDFF, #FEB78A);
+    }
+    .formula-table {
+      background: #222;
+      color: white;
+      border-radius: 10px;
+      padding: 10px 20px;
+      display: inline-block;
+      display: flex;
+      flex-direction: column;
+    }
+    .explanation-box-1 {
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      width: fit-content;
+      gap: 20px;
+      align-items: anchor-center;
+    }
+    .math-box {
+      border-radius: 12px;
+      padding: 10px 20px;
+      margin: 10px 0;
+      font-weight: bold;
+      display: inline-block;
+      text-align: center;
+    }
+    .fraction {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .line-by {
+      width: 40px;
+      height: 3px;
+      background: gray;
+    }
+    .linel-by {
+      width: 140px;
+      height: 3px;
+      background: white;
+    }
+    .fraction-container {
+      display: flex;
+      align-items: center;
+      justify-content: left;
+      gap: 6px;
+    }
+    .answer-box {
+      font-size: 30px;
+      background-color: #1BAD83;
+      color: white;
+      padding: 6px 20px;
+      border-radius: 10px;
+      font-weight: bold;
+      margin-left: 10px;
+      box-shadow: 3px 3px 4px rgba(181, 181, 181, 1.5);
+    }
+    .formulaBoxUltimate {
+      width: 298px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-top: 10px;
+    }
+    .arrow-img {
+      width: 50px;
+    }
+    .problem-info {
+      background: #f0f7ff;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Trigonometry Problem Generator</h1>
+    <p>Using Pythagorean Triplets to Solve Trigonometry Problems</p>
+  </div>
+  <div class="controls">
+    <button id="generateBtn">Generate New Problem</button>
+  </div>
+  <div class="problem-info">
+    <p id="problemStatement">Click the button to generate a problem</p>
+  </div>
+  <div class="container">
+    <div>
+      <div class="explanation-box-1">
+        <div class="math-box">
+          <span style="background:#ED8392; color:black; padding:4px 8px; border-radius:6px;box-shadow: 3px 3px 4px rgba(181, 181, 181, 1.5);">A</span>
+          <span style="background:#B7F3F0; color:black; padding:4px 8px; border-radius:6px;box-shadow: 3px 3px 4px rgba(181, 181, 181, 1.5);">C</span>
+          -
+          <span style="background:#7BC3EC; color:black; padding:4px 8px; border-radius:6px;box-shadow: 3px 3px 4px rgba(181, 181, 181, 1.5);">B</span>
+          <span style="background:#B7F3F0; color:black; padding:4px 8px; border-radius:6px;box-shadow: 3px 3px 4px rgba(181, 181, 181, 1.5);">C</span>
+          = 1
+        </div>
+        <div style="border: 2px solid #ccc;border-radius: 10px;background: #F2F2F2;">
+          <div class="math-box">
+            <div id="tripletEquation">a² - b² = c²</div>
+            <div><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTAiIGhlaWdodD0iNTAiPjxwYXRoIGZpbGw9IiMzMzMzMzMiIGQ9Ik01MCAyNTZMMzYwIDg2bDQyIDQyLTIzOCAyMzhMMzYwIDQyNmwtNDItNDJaIi8+PC9zdmc+" alt="arrow" class="arrow-img"></div>
+            <div id="tripletInfo">Pythagorean triplet info</div>
+          </div>
+        </div>
+        <div class="fraction-container">
+          <span>(Sec <span style="background:#b3d8f1; color:black; padding:4px 8px; border-radius:6px;box-shadow: 3px 3px 4px rgba(181, 181, 181, 1.5);">C</span> + Cot <span style="background:#f79ba2; color:black; padding:4px 8px; border-radius:6px;box-shadow: 3px 3px 4px rgba(181, 181, 181, 1.5);">A</span>) =</span>
+          <div class="fraction">
+            <div id="secFractionTop">h</div>
+            <div class="line-by"></div>
+            <div id="secFractionBottom">b</div>
+          </div>
+          <span>&nbsp;+&nbsp;</span>
+          <div class="fraction">
+            <div id="cotFractionTop">a</div>
+            <div class="line-by"></div>
+            <div id="cotFractionBottom">o</div>
+          </div>
+        </div>
+        <div class="fraction-container" style="margin-left: 190px;">
+          <span>=</span>
+          <div class="answer-box" id="finalAnswer">Answer</div>
+        </div>
+      </div>
+    </div>
+    <div style="display: flex;flex-direction: column;">
+      <div class="triangle-diagram">
+        <div class="side ab"></div>
+        <div class="side bc"></div>
+        <svg class="side-ac-line" width="240" height="140">
+          <polygon points="0,140 0,0 240,140" fill="rgba(173, 216, 230, 0.2)" />
+          <line x1="0" y1="0" x2="240" y2="140" stroke="black" stroke-width="4" />
+        </svg>
+        <div class="label point-a">A</div>
+        <div class="label point-b">B</div>
+        <div class="label point-c">C</div>
+        <div class="dimension ab-label" id="abSide">AB cm</div>
+        <div class="dimension bc-label" id="bcSide">BC cm</div>
+        <div class="dimension ac-label" id="acSide">AC cm</div>
+      </div>
+      <div class="formulaBoxUltimate">
+        <div class="formula-table" style="border-radius: 10px 10px 0px 0px;">
+          <div class="fraction-container">
+            Sec <span style="background:#b3d8f1; color:black; padding:4px 8px; border-radius:6px;">C</span> =
+            <div class="fraction">
+              <div>Hypotenuse</div>
+              <div class="linel-by"></div>
+              <div>Base</div>
+            </div>
+          </div>
+        </div>
+        <div class="formula-table" style="border-radius: 0px 0px 10px 10px;">
+          <div class="fraction-container">
+            Cot <span style="background:#f79ba2; color:black; padding:4px 8px; border-radius:6px;">A</span> =
+            <div class="fraction">
+              <div>Adjacent</div>
+              <div class="linel-by"></div>
+              <div>Opposite</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const triplets = [
+      {a: 3, b: 4, c: 5},
+      {a: 5, b: 12, c: 13},
+      {a: 7, b: 24, c: 25},
+      {a: 8, b: 15, c: 17},
+      {a: 9, b: 40, c: 41},
+      {a: 12, b: 35, c: 37}
+    ];
+    function generateProblem() {
+      const randomIndex = Math.floor(Math.random() * triplets.length);
+      const triplet = triplets[randomIndex];
+      let AB, BC, AC;
+      if (Math.random() > 0.5) {
+        AB = triplet.a;
+        BC = triplet.b;
+      } else {
+        AB = triplet.b;
+        BC = triplet.a;
+      }
+      AC = triplet.c;
+      const secC = AC / BC;
+      const cotA = AB / BC;
+      const result = secC + cotA;
+      let simplifiedResult = result;
+      if (Number.isInteger(result)) {
+        simplifiedResult = result;
+      } else if (result === Math.floor(result * 2) / 2) {
+        simplifiedResult = result;
+      }
+      document.getElementById('problemStatement').textContent = 
+        `In a right triangle ABC, right-angled at B, if AB = ${AB} cm and BC = ${BC} cm, find the value of (Sec C + Cot A).`;
+      document.getElementById('abSide').textContent = `${AB} cm`;
+      document.getElementById('bcSide').textContent = `${BC} cm`;
+      document.getElementById('acSide').textContent = `${AC} cm`;
+      document.getElementById('tripletEquation').textContent = 
+        `${AC}² - ${BC}² = ${AB}²  |  ${AC*AC} - ${BC*BC} = ${AB*AB}`;
+      document.getElementById('tripletInfo').textContent = 
+        `${AB}, ${BC}, ${AC} is a Pythagorean triplet`;
+      document.getElementById('secFractionTop').textContent = AC;
+      document.getElementById('secFractionBottom').textContent = BC;
+      document.getElementById('cotFractionTop').textContent = AB;
+      document.getElementById('cotFractionBottom').textContent = BC;
+      document.getElementById('finalAnswer').textContent = simplifiedResult;
+      if (!Number.isInteger(simplifiedResult)) {
+        const numerator = AC + AB;
+        const denominator = BC;
+        const gcdVal = gcd(numerator, denominator);
+        if (gcdVal > 1) {
+          document.getElementById('finalAnswer').textContent = 
+            `${numerator/gcdVal}/${denominator/gcdVal}`;
+        } else {
+          document.getElementById('finalAnswer').textContent = 
+            `${numerator}/${denominator}`;
+        }
+      }
+    }
+    function gcd(a, b) {
+      return b === 0 ? a : gcd(b, a % b);
+    }
+    document.getElementById('generateBtn').addEventListener('click', generateProblem);
+    window.onload = generateProblem;
+  </script>
+</body>
+</html>
